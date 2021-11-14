@@ -4,9 +4,19 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
+    #region SINGLETON
+    public static EnemySpawner Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+    #endregion
+
+    public List<GameObject> activeEnemies;
+
     [SerializeField] Transform towers;
     [SerializeField] List<GameObject> enemies;
-    [SerializeField] List<Transform> spawnPoints;
 
     [SerializeField] float spawnRate;
 
@@ -15,23 +25,24 @@ public class EnemySpawner : MonoBehaviour
     int waveIndex = 1;
     int numberOfEnemies;
 
+    float MaxHealth;
+    float damage;
+
     private void Start()
     {
-        // initialize
-        EnemyBehavior.damageAdd = 0;
-        EnemyBehavior.healthAdd = 0;
+        activeEnemies = new List<GameObject>();
 
         numberOfEnemies = Random.Range(waveIndex, waveIndex + 10);
     }
 
     private void Update()
     {
-        GameObject[] totalEnemies = GameObject.FindGameObjectsWithTag("Enemy");
-        if(totalEnemies.Length == 0 && !canSpawn)
+        if(activeEnemies.Count == 0 && !canSpawn)
         {
             waveIndex++;
             IncreaseDiff();
             GameManager.Instance.SetLastWaveIndex(waveIndex);
+            GameManager.Instance.GainHealth();
             numberOfEnemies = Random.Range(waveIndex, waveIndex + 10);
 
             canSpawn = true;
@@ -52,10 +63,8 @@ public class EnemySpawner : MonoBehaviour
         {
             // Randomize Enemies
             int randomEnemy = Random.Range(0, enemies.Count);
-            // Randomize SpawnPoints
-            int randomSpawnPoint = Random.Range(0, spawnPoints.Count);
             //Spawn Enemies
-            GameObject clone = Instantiate(enemies[randomEnemy], spawnPoints[randomSpawnPoint].position, Quaternion.identity);
+            Spawn(enemies[randomEnemy]);
 
             numberOfEnemies--;
             if(numberOfEnemies == 0)
@@ -63,6 +72,14 @@ public class EnemySpawner : MonoBehaviour
                 canSpawn = false;
             }
         }
+    }
+    private void Spawn(GameObject go)
+    {
+        var spawnedEnemy = Pooling.Instance.ActivateObject(go.tag);
+        spawnedEnemy.SetActive(true);
+        spawnedEnemy.transform.position = transform.position;
+
+        activeEnemies.Add(spawnedEnemy);
     }
 
     public void StartWave()
@@ -74,16 +91,16 @@ public class EnemySpawner : MonoBehaviour
             child.gameObject.SetActive(false);
     }
 
-    public void IncreaseDiff()
+    private void IncreaseDiff()
     {
         int rnd = Random.Range(0, 2);
         switch (rnd)
         {
             case 0:
-                EnemyBehavior.damageAdd += Random.Range(1,6);
+                EnemyBehavior.healthAdd += 5;
                 break;
             case 1:
-                EnemyBehavior.healthAdd += Random.Range(1,16);
+                EnemyBehavior.damageAdd += 5;
                 break;
             default:
                 break;

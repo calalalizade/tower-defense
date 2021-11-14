@@ -5,21 +5,25 @@ TagManager:
   serializedVersion: 2
   tags:
   - Path
-  - Enemy
   - Projectile
   - TurretTower
   - RocketTower
+  - S-400
+  - Undefined
+  - Soldier
+  - Corporal
+  - Plane
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Enemy
+  - LandForce
   - Water
   - UI
   - clickable
-  - 
-  - 
-  - 
+  - AirDefense
+  - LandDefense
+  - AirForce
   - 
   - 
   - 

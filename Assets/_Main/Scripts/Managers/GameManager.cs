@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        Time.timeScale = 1;
         Instance = this;
     }
     #endregion
@@ -20,12 +19,17 @@ public class GameManager : MonoBehaviour
 
     public int InitialTurretPrice;
     public int InitialRocketPrice;
+    public int InitialS400Price;
 
     private int turretPrice;
     private int rocketPrice;
+    private int s400Price;
+
+    public int baseUpgradePrice;
 
     public float maxHealth;
-    private float health;
+    [SerializeField] private float health;
+    [SerializeField] private float healthRestored; //upgraded base
      
     private int money;
     private HealthScript healthScript;
@@ -35,21 +39,25 @@ public class GameManager : MonoBehaviour
     private int killCount;
 
     public bool isStarted;
-
+    bool isUpgraded;
 
     void Start()
     {
+        Time.timeScale = 1;
+
         money = InitialMoney;
         health = maxHealth;
 
         turretPrice = InitialTurretPrice;
         rocketPrice = InitialRocketPrice;
+        s400Price = InitialS400Price;
 
         healthScript = GetComponent<HealthScript>();
         hudScript = GetComponent<HudScript>();
         endScreenElements = GetComponent<EndScreenElements>();
 
         hudScript.UpdateMoney(InitialMoney);
+        hudScript.UpdateBaseUpgrade(baseUpgradePrice);
         healthScript.UpdateHealth(maxHealth);
     }
 
@@ -75,6 +83,10 @@ public class GameManager : MonoBehaviour
         {
             money -= turretPrice;
         }
+        else if(turret.CompareTag("S-400"))
+        {
+            money -= s400Price;
+        }
         else
         {
             money -= rocketPrice;
@@ -94,11 +106,22 @@ public class GameManager : MonoBehaviour
         if (tag == "TurretTower")
             return money >= turretPrice;
 
+        if (tag == "S-400")
+            return money >= s400Price;
+
         return money >= rocketPrice;
     }
     public int PriceForTurret(string tag)
     {
-        return tag == "TurretTower" ? turretPrice : rocketPrice;
+       // return tag == "TurretTower" ? turretPrice : rocketPrice;
+
+        if (tag == "TurretTower")
+            return turretPrice;
+
+        if (tag == "S-400")
+            return s400Price;
+
+        return rocketPrice;
     }
 
     public void AddMoney(int value)
@@ -107,6 +130,24 @@ public class GameManager : MonoBehaviour
         hudScript.UpdateMoney(money);
     }
 
+    public void GainHealth()
+    {
+        health = health = Mathf.Clamp(health + health * 0.05f, 0, maxHealth);
+        if (isUpgraded) health = Mathf.Clamp(health + healthRestored,0,maxHealth);
+
+        healthScript.UpdateHealth(health);
+    }
+
+    public void BaseUpgraded()
+    {
+        if(money >= baseUpgradePrice && !isUpgraded)
+        {
+            isUpgraded = !isUpgraded;
+            money -= baseUpgradePrice;
+            hudScript.UpdateMoney(money);
+            hudScript.HideUpgradeButton();
+        }
+    }
     public int GetMoney()
     {
         return money;
@@ -123,6 +164,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0;
         hud.SetActive(false);
         gameOverScreen.SetActive(true);
+
     }
 
     public void RestartGame()

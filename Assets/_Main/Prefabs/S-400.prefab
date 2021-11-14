@@ -147,8 +147,8 @@ GameObject:
   - component: {fileID: 251303315344529039}
   - component: {fileID: 5760835873371039302}
   m_Layer: 6
-  m_Name: Turret
-  m_TagString: TurretTower
+  m_Name: S-400
+  m_TagString: S-400
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -403,7 +403,7 @@ GameObject:
   - component: {fileID: 6008895618256279529}
   - component: {fileID: 620581996690178331}
   - component: {fileID: 4078779963428322356}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: Cannon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -465,7 +465,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 30
-  m_Sprite: {fileID: 21300000, guid: 8fd6998423a4a27499eb9865286b9d7b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ba65bc3ef894f974584a9bcfb27c9826, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -488,16 +488,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aa8d47cd0827ff4fa72acd5c83d6962, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectile: {fileID: 4394232544383927097, guid: 5bf80ecdfcbc5514089fad222ec4202c, type: 3}
+  projectile: {fileID: 4394232544383927097, guid: 9eafe890e220104489ea33ce891ebd64, type: 3}
   pPoint: {fileID: 6066604154844642808}
-  shootRange: 6
+  shootRange: 4
   OverlapRadius: 3
   _rotMultiplier: 80
   fireRateInit: 1
   currentFireRate: 0
   damageAdd: 0
-  isAir: 0
-  targetLayer: 3
+  isAir: 1
+  targetLayer: 9
 --- !u!1 &6396865487149341033
 GameObject:
   m_ObjectHideFlags: 0
@@ -641,7 +641,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6066604154844642808}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: projectilePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

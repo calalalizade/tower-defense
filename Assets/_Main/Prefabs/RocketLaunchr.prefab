@@ -403,7 +403,7 @@ GameObject:
   - component: {fileID: 6008895618256279529}
   - component: {fileID: 620581996690178331}
   - component: {fileID: 4078779963428322356}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Cannon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -490,11 +490,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectile: {fileID: 4394232544383927097, guid: cfe64a32a4dd0fc46b3815ba3b96ed5b, type: 3}
   pPoint: {fileID: 6066604154844642808}
+  shootRange: 4
   OverlapRadius: 3
   _rotMultiplier: 80
   fireRateInit: 1
   currentFireRate: 0
   damageAdd: 0
+  isAir: 0
+  targetLayer: 3
 --- !u!1 &6396865487149341033
 GameObject:
   m_ObjectHideFlags: 0

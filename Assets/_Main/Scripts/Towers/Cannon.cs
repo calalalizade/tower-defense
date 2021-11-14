@@ -11,6 +11,7 @@ public class Cannon : MonoBehaviour
 
     private Transform nearestEnemy;
     private int enemyLayer;
+    private int airForceLayer;
 
     [SerializeField] float fireRateInit = 1f;
     [HideInInspector] public float currentFireRate;
@@ -18,14 +19,19 @@ public class Cannon : MonoBehaviour
 
     [HideInInspector] public float damageAdd;
 
+    [SerializeField] bool isAir;
+
+    public int targetLayer;
+
     private void Start()
     {
         currentFireRate = fireRateInit;
-        enemyLayer = LayerMask.NameToLayer("Enemy");
+        enemyLayer = LayerMask.NameToLayer("LandForce");
+        airForceLayer = LayerMask.NameToLayer("AirForce");
     }
     void Update()
     {
-        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, OverlapRadius, 1 << enemyLayer);
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, OverlapRadius, 1 << enemyLayer | 1 << airForceLayer);
         float minimumDistance = Mathf.Infinity;
         foreach (Collider2D collider in hitColliders)
         {
@@ -34,15 +40,18 @@ public class Cannon : MonoBehaviour
             {
                 minimumDistance = distance;
 
-                if(nearestEnemy == null)
+                if (nearestEnemy == null)
                     nearestEnemy = collider.transform;
+
+                if (nearestEnemy.gameObject.layer != targetLayer)
+                    nearestEnemy = null;
             }
         }
-        if (nearestEnemy != null && Vector3.Distance(transform.position, nearestEnemy.position) < shootRange)
+        if (nearestEnemy != null && Vector3.Distance(transform.position, nearestEnemy.position) < shootRange && nearestEnemy.gameObject.activeSelf)
         {
             TurnToEnemy(nearestEnemy.position);
 
-            if(fireCountdown <= 0f)
+            if (fireCountdown <= 0f)
             {
                 Shoot();
                 fireCountdown = 1 / currentFireRate;

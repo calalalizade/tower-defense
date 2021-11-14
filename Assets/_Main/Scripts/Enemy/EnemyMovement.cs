@@ -6,7 +6,12 @@ public class EnemyMovement : MonoBehaviour
     private PathFollow path;
     private int wpIndex;
 
-    // Start is called before the first frame update
+
+    private void OnEnable()
+    {
+        wpIndex = 0;
+    }
+
     void Start()
     {
         path = GameObject.FindGameObjectWithTag("Path").GetComponent<PathFollow>();
